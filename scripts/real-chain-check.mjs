@@ -20,7 +20,7 @@ const shimBaseUrl = () => {
 	const origin = shim.baseUrlSync();
 	return origin === undefined ? undefined : `${origin}/v1`;
 };
-const model = {
+const model = /** @type {any} */ ({  // host pi-ai types vary; runtime contract is what this probe drives
 	id: "spark-x2.6",
 	name: "Spark-X2.6",
 	api: "openai-completions",
@@ -32,7 +32,7 @@ const model = {
 	maxTokens: 32000,
 	reasoning: true,
 	compat: { supportsReasoningEffort: true },
-};
+});
 console.log("descriptor baseUrl:", model.baseUrl);
 if (!/\/v1$/.test(model.baseUrl)) {
 	console.log("FAIL: baseUrl missing /v1 suffix");
@@ -40,16 +40,20 @@ if (!/\/v1$/.test(model.baseUrl)) {
 }
 
 const api = openAICompletionsApi();
-const context = { messages: [{ role: "user", content: "只回复两个字：成功" }] };
+const context = /** @type {any} */ ({ messages: [{ role: "user", content: "只回复两个字：成功" }] });
 const options = { apiKey: shim.token(), maxTokens: 32 };
 
 let text = "";
 let streamErr = null;
 try {
-	for await (const chunk of api.stream(model, context, options)) {
-		if (chunk?.type === "text-delta" && typeof chunk.delta === "string") text += chunk.delta;
-		else if (chunk?.delta && typeof chunk.delta === "string") text += chunk.delta;
-		else if (typeof chunk?.text === "string") text += chunk.text;
+	for await (const chunk of /** @type {any} */ (await /** @type {any} */ (api.stream(model, context, options)))) {
+		// Chunk shapes vary across pi-ai generations (reasoning deltas, text
+		// deltas, message snapshots) — read loosely, this is an acceptance
+		// probe, not a typed consumer.
+		const anyChunk = /** @type {any} */ (chunk);
+		if (typeof anyChunk?.delta === "string") text += anyChunk.delta;
+		else if (typeof anyChunk?.text === "string") text += anyChunk.text;
+		else if (typeof anyChunk?.partial?.content === "string") text = anyChunk.partial.content;
 	}
 } catch (error) {
 	streamErr = error;
