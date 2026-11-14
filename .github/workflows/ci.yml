@@ -28,6 +28,8 @@ jobs:
         run: npm run typecheck
       - name: Syntax gate (node --check + client CJS shape)
         run: node scripts/check-syntax.mjs
+      - name: Wiring contract (shim baseUrl carries /v1)
+        run: node scripts/check-contract.mjs
       - name: Pack (platform-gated package, Windows only)
         if: matrix.os == 'windows-latest'
         run: npm pack

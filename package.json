@@ -59,7 +59,8 @@
     "probe": "node lib/cli-probe.js",
     "doctor": "node lib/cli-doctor.js",
     "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.client.json",
-    "prepack": "npm run typecheck && node scripts/check-syntax.mjs"
+    "prepack": "npm run typecheck && node scripts/check-syntax.mjs && node scripts/check-contract.mjs",
+    "check:contract": "node scripts/check-contract.mjs"
   },
   "dsh": {
     "bundle": {
