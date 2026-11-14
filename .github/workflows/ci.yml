@@ -17,11 +17,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      # The package declares os: [win32] / cpu: [x64] on purpose — it reads a
+      # Windows-only Loomy layout. On non-Windows runners that gates the root
+      # package out of a plain `npm install` (EBADPLATFORM), so the deps-only
+      # install is forced there; the platform contract itself is still enforced
+      # by real installs on Windows.
       - name: Install dependencies
-        run: npm install
+        run: npm install ${{ matrix.os == 'windows-latest' && '' || '--force' }}
       - name: Typecheck (allowJs + checkJs)
         run: npm run typecheck
       - name: Syntax gate (node --check + client CJS shape)
         run: node scripts/check-syntax.mjs
-      - name: Pack
+      - name: Pack (platform-gated package, Windows only)
+        if: matrix.os == 'windows-latest'
         run: npm pack
