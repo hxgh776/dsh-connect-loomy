@@ -1,0 +1,7 @@
+# Register the Loomy provider without changing the profile's default model.
+# The plugin reuses the Loomy desktop app's own sign-in (it READS the
+# auth-session.json the Loomy main process maintains); no separate login flow
+# is started and no credential is ever copied or stored.
+- insert:
+    - id: dsh-connect-loomy
+      name: dsh-connect-loomy
