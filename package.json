@@ -2,7 +2,7 @@
   "name": "dsh-connect-loomy",
   "displayName": "DSH Connect Loomy",
   "description": "把本机已登录的 Loomy（讯飞）账号接入 DeepSeek Harness：OpenAI 兼容对话模型（含 reasoning 思考链与结构化工具调用透传）、只读积分额度看板（总余额 / 每日额度 / 可用余额）。复用 Loomy 桌面端本机登录态，不复制、不存储凭据；仅 Windows x64。",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "repository": {
     "type": "git",

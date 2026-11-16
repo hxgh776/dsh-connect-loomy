@@ -82,7 +82,7 @@ node lib/bin.js doctor | probe
 ## 隐私
 
 - **只读 Loomy 的登录态文件，不复制、不密封、不写回。** 会话 token 只出现在本插件进程到 Loomy 网关的 HTTPS 请求头里，不落盘、不进日志、不出现在任何 web 路由响应中。
-- web 路由（`/plugins/dsh-connect-loomy/{quota,catalog,status,__save}`）仅回数字/清单型允许清单视图；loopback Host/Origin + `sec-fetch-site` 门禁；写路由额外要求 `x-dsh-loomy-write` 头（CSRF 防护）。
+- web 路由（`/plugins/dsh-connect-loomy/{quota,catalog,status,__save}`）仅回数字/清单型允许清单视图；入口先过宿主 Connection 的 `requestRejection`（Host/Origin 门禁 + DSH 界面同源请求携带的浏览器凭据，因此外部进程调用与跨站页面发起的请求都会被 401/403 拒绝），再叠加 loopback Host/Origin + `sec-fetch-site` 门禁兜底；写路由额外要求 `x-dsh-loomy-write` 头（CSRF 防护）。
 - loopback shim：随机端口 + 进程内随机 secret（`timingSafeEqual` 校验）+ 64MB 请求体上限 + 300s 流式空闲看门狗。
 - 仓库内不含任何凭据与个人数据；协议文档已脱敏（见 [docs/protocol.md](docs/protocol.md)）。
 
