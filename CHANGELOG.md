@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 — 2026-11-16
+
+- 设置卡片层级调整：标题只保留产品名「Loomy（讯飞）」，原先拼在标题后的「复用本机已登录的 Loomy 账号」改为独立描述行（标题与描述分两行、两级字号）。
+- 登录状态改为状态行：状态圆点（已登录绿 / 未登录琥珀）+ 加粗状态词 + 账号（掩码 userid），刷新按钮靠右收进同一行；未登录提示改为常规字号提示，不再用告警色。
+- 仅界面与文案，路由、模型、额度逻辑未变。
+
 ## 0.1.1 — 2026-11-16
 
 - 安全：四条设置路由（`/plugins/dsh-connect-loomy/{quota,catalog,status,__save}`）现在入口先过宿主 Connection 的 `requestRejection`：`webServer.register` 挂的顶层路由不经过 DSH 自身的 Host/Origin 与浏览器凭据准入，此前跨站页面（`fetch` 带外来 Origin 会被原有门禁挡住，但顶层导航不带 Origin）仍能读到额度数字。现在未携带 DSH 界面同源凭据的外部请求一律 401/403；宿主没有 `connection` 服务时回落到原有 loopback 门禁，行为与旧版一致。围栏抛错时按 403 处理（fail closed）。
